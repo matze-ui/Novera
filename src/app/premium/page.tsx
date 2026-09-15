@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { WaitlistForm } from "@/components/premium/waitlist-form";
 
 export const metadata: Metadata = {
   title: "NOVERA Premium",
@@ -75,14 +76,7 @@ export default function PremiumPage() {
                 <FeatureRow key={f} label={f} highlight />
               ))}
             </ul>
-            <Button disabled className="mt-8 w-full justify-center">
-              Coming soon
-            </Button>
-            <p className="mt-3 text-center text-xs text-muted-soft">
-              Premium isn&rsquo;t billable yet — no payment is collected, and nothing here
-              simulates a completed purchase. Payments will be added through Stripe or a
-              similar provider before this goes live.
-            </p>
+            <WaitlistForm />
           </div>
         </div>
       </Container>

@@ -7,14 +7,16 @@ export function PropertyGrid({
   matchScores,
   emptyTitle = "No matches",
   emptyDescription = "Try widening your budget or location.",
+  emptyAction,
 }: {
   properties: Property[];
   matchScores?: Record<string, number>;
   emptyTitle?: string;
   emptyDescription?: string;
+  emptyAction?: React.ReactNode;
 }) {
   if (properties.length === 0) {
-    return <EmptyState title={emptyTitle} description={emptyDescription} />;
+    return <EmptyState title={emptyTitle} description={emptyDescription} action={emptyAction} />;
   }
 
   return (

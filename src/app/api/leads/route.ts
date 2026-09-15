@@ -1,39 +1,42 @@
 import { NextResponse } from "next/server";
+import { addLead } from "@/lib/server/lead-store";
+import type { LeadSource } from "@/lib/types";
+
+const VALID_SOURCES: LeadSource[] = ["match", "viewing-request", "owner-submission", "contact"];
 
 /**
- * DEMO endpoint for contact / enquiry submissions (property enquiries and
- * owner property submissions). Held in memory for this server process
- * only — nothing is persisted, emailed or pushed into a CRM. Replace with
- * a real database and notification pipeline before production use.
+ * Single lead-capture endpoint for the whole site: NOVERA Match requirement
+ * submissions, viewing requests, owner property submissions, and general
+ * contact messages all land here and are written to the local lead store
+ * (see src/lib/server/lead-store.ts) so they show up in /dashboard/leads.
  */
-interface StoredLead {
-  id: string;
-  type: "contact" | "owner-submission";
-  payload: Record<string, unknown>;
-  createdAt: string;
-}
-
-const store: StoredLead[] = [];
-
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
-  if (!body || typeof body.type !== "string") {
+  if (
+    !body ||
+    typeof body.source !== "string" ||
+    !VALID_SOURCES.includes(body.source as LeadSource) ||
+    typeof body.name !== "string" ||
+    !body.name.trim() ||
+    typeof body.email !== "string" ||
+    !body.email.trim()
+  ) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  const entry: StoredLead = {
-    id: crypto.randomUUID(),
-    type: body.type === "owner-submission" ? "owner-submission" : "contact",
-    payload: typeof body.payload === "object" && body.payload !== null ? body.payload : {},
-    createdAt: new Date().toISOString(),
-  };
+  const lead = await addLead({
+    source: body.source as LeadSource,
+    name: body.name.trim(),
+    email: body.email.trim(),
+    phone: typeof body.phone === "string" ? body.phone.trim() : undefined,
+    propertyTitle:
+      typeof body.propertyTitle === "string" && body.propertyTitle.trim()
+        ? body.propertyTitle.trim()
+        : "General enquiry",
+    requirements: typeof body.requirements === "string" ? body.requirements : undefined,
+    message: typeof body.message === "string" ? body.message : undefined,
+  });
 
-  store.push(entry);
-
-  return NextResponse.json({ status: "received", id: entry.id });
-}
-
-export async function GET() {
-  return NextResponse.json({ count: store.length, note: "In-memory demo store, not persisted." });
+  return NextResponse.json({ status: "received", id: lead.id });
 }

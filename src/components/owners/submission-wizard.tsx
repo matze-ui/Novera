@@ -76,11 +76,36 @@ export function SubmissionWizard() {
 
   async function handleSubmit() {
     setStatus("submitting");
+    const goalLabel =
+      form.goal === "sell" ? "Sell" : form.goal === "rent" ? "Rent out" : "Promote a development";
+    const propertyTitle = `${goalLabel}: ${form.propertyType} in ${form.location || "location tbc"}`;
+    const requirements = [
+      `Type: ${form.propertyType}`,
+      `Location: ${form.location || "—"}`,
+      `Price: ${form.price ? `€${form.price}${form.goal === "rent" ? "/month" : ""}` : "—"}`,
+      `Size: ${form.size ? `${form.size} m²` : "—"}`,
+      `Bedrooms/Bathrooms: ${form.bedrooms || "—"} / ${form.bathrooms || "—"}`,
+      `Availability: ${form.availability || "—"}`,
+      `Features: ${form.features.join(", ") || "—"}`,
+      form.company ? `Company: ${form.company}` : null,
+      `Media files: ${form.mediaFileNames.length}`,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "owner-submission", payload: form }),
+        body: JSON.stringify({
+          source: "owner-submission",
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          propertyTitle,
+          requirements,
+          message: form.description,
+        }),
       });
       if (!res.ok) throw new Error("failed");
       setStatus("submitted");
@@ -94,9 +119,8 @@ export function SubmissionWizard() {
       <div className="rounded-2xl border border-line bg-white p-10 text-center">
         <h2 className="text-2xl font-semibold text-graphite">Thanks — we&rsquo;ve got it</h2>
         <p className="mt-3 text-muted">
-          Your property submission has been recorded. Because NOVERA doesn&rsquo;t yet have a
-          connected database or review team, this is a demo of the intake flow — nothing has
-          gone live and no one has been notified.
+          Your property has been submitted. A member of the NOVERA team will review the
+          details and get back to you to confirm next steps.
         </p>
         <Button href="/for-owners" className="mt-6">
           Back to overview
@@ -286,8 +310,9 @@ export function SubmissionWizard() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-graphite">Photos & media</h2>
             <p className="text-sm text-muted">
-              Select files to attach. This demo does not upload or store them anywhere —
-              file storage isn&rsquo;t connected yet — but the flow shows how it will work.
+              Select the files you&rsquo;d like to share. File upload isn&rsquo;t connected
+              yet, so we&rsquo;ll follow up by email to collect the actual photos — for now,
+              just tell us what you have ready.
             </p>
             <input
               type="file"

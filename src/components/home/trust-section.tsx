@@ -3,8 +3,8 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 const points = [
   {
-    title: "Every demo listing is labeled",
-    description: "Development inventory carries a visible DEMO badge until real properties are connected.",
+    title: "A real person reads every enquiry",
+    description: "Every search, match request and viewing request reaches the NOVERA team directly — not an inbox no one checks.",
   },
   {
     title: "Match scores are explained",
@@ -12,11 +12,11 @@ const points = [
   },
   {
     title: "No fake status",
-    description: "A viewing shows as requested, never confirmed, until a real booking exists behind it.",
+    description: "A viewing shows as requested, never confirmed, until it's actually booked with you.",
   },
   {
     title: "Clear contact, always",
-    description: "Every enquiry path leads to a real contact method or an honest 'coming soon' — never a dead button.",
+    description: "Every enquiry path leads to a real conversation with NOVERA — never a dead button.",
   },
 ];
 

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { FeaturedProperties } from "@/components/home/featured-properties";
-import { ProductFlow } from "@/components/home/product-flow";
-import { ProductArchitecture } from "@/components/home/product-architecture";
 import { OwnerCta } from "@/components/home/owner-cta";
 import { TrustSection } from "@/components/home/trust-section";
 
@@ -18,8 +16,6 @@ export default function HomePage() {
     <>
       <Hero />
       <FeaturedProperties />
-      <ProductFlow />
-      <ProductArchitecture />
       <OwnerCta />
       <TrustSection />
     </>

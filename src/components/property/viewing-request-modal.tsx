@@ -4,23 +4,23 @@ import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatDateLong } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "requested" | "error";
 
 export function ViewingRequestModal({
   open,
   onClose,
-  propertySlug,
   propertyTitle,
 }: {
   open: boolean;
   onClose: () => void;
-  propertySlug: string;
   propertyTitle: string;
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [preferredDay, setPreferredDay] = useState("");
   const [preferredTime, setPreferredTime] = useState("Afternoon");
   const [message, setMessage] = useState("");
@@ -29,10 +29,18 @@ export function ViewingRequestModal({
     e.preventDefault();
     setStatus("submitting");
     try {
-      const res = await fetch("/api/viewing-requests", {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ propertySlug, name, email, preferredDay, preferredTime, message }),
+        body: JSON.stringify({
+          source: "viewing-request",
+          name,
+          email,
+          phone,
+          propertyTitle,
+          requirements: `Preferred: ${formatDateLong(preferredDay)} (${preferredTime})`,
+          message,
+        }),
       });
       if (!res.ok) throw new Error("Request failed");
       setStatus("requested");
@@ -47,13 +55,14 @@ export function ViewingRequestModal({
       setStatus("idle");
       setName("");
       setEmail("");
+      setPhone("");
       setPreferredDay("");
       setMessage("");
     }
   }
 
   return (
-    <Modal open={open} onClose={handleClose} title={`Request a viewing`}>
+    <Modal open={open} onClose={handleClose} title="Request a viewing">
       {status === "requested" ? (
         <div className="text-center">
           <Badge tone="success" className="mx-auto">
@@ -63,9 +72,8 @@ export function ViewingRequestModal({
             Your viewing request for <strong>{propertyTitle}</strong> has been sent.
           </p>
           <p className="mt-2 text-sm text-muted">
-            This is a request, not a confirmed booking. Because NOVERA is not yet
-            connected to a real calendar, no one has been notified automatically — treat
-            this as a demo of the flow.
+            NOVERA will confirm your preferred time directly with you by email or phone —
+            this shows as requested until it&rsquo;s actually booked.
           </p>
           <Button onClick={handleClose} className="mt-6">
             Done
@@ -98,6 +106,15 @@ export function ViewingRequestModal({
               />
             </label>
             <label className="block">
+              <span className="mb-1 block text-xs font-medium text-muted">Phone (optional)</span>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
+              />
+            </label>
+            <label className="block">
               <span className="mb-1 block text-xs font-medium text-muted">Preferred day</span>
               <input
                 type="date"
@@ -107,7 +124,7 @@ export function ViewingRequestModal({
                 className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
               />
             </label>
-            <label className="block">
+            <label className="block sm:col-span-2">
               <span className="mb-1 block text-xs font-medium text-muted">Preferred time</span>
               <select
                 value={preferredTime}

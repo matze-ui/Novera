@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { Property } from "@/lib/types";
 import { PropertyArt } from "@/components/property/property-art";
-import { Badge, DemoBadge, MatchBadge } from "@/components/ui/badge";
+import { Badge, MatchBadge } from "@/components/ui/badge";
 import { formatPrice, formatSize, propertyTypeLabel } from "@/lib/utils";
 import { isSaved, toggleSaved, SAVED_PROPERTIES_EVENT } from "@/lib/saved-properties";
 import { useExternalValue } from "@/lib/use-external-value";
@@ -30,12 +30,11 @@ export function PropertyCard({
           image={property.images[0]}
           className="transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
-          <div className="flex flex-wrap gap-2">
-            <DemoBadge />
-            {typeof matchScore === "number" && <MatchBadge score={matchScore} />}
+        {typeof matchScore === "number" && (
+          <div className="absolute left-3 top-3">
+            <MatchBadge score={matchScore} />
           </div>
-        </div>
+        )}
         {unavailable && (
           <div className="absolute inset-x-0 bottom-0 bg-graphite/85 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wide text-white">
             {property.status === "under-offer" ? "Under offer" : "No longer available"}

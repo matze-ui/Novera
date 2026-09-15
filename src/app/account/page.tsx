@@ -10,8 +10,8 @@ export default function MyMatchesPage() {
     <div>
       <h2 className="text-lg font-semibold text-graphite">My matches</h2>
       <p className="mt-2 max-w-lg text-sm text-muted">
-        Run NOVERA Match to get a personalized ranking. Below is an example set of matches
-        using sample preferences, so you can see the shape of this page.
+        Run NOVERA Match to get a ranking based on what you actually need. Until then, here
+        are a few current properties to get you started.
       </p>
       <Button href="/match" className="mt-4">
         Run NOVERA Match

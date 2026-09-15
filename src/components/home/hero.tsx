@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SearchBar } from "@/components/search/search-bar";
 import { PropertyArt } from "@/components/property/property-art";
-import { DemoBadge } from "@/components/ui/badge";
 import { formatPrice, formatSize } from "@/lib/utils";
 import { demoProperties } from "@/lib/demo-properties";
 
@@ -36,21 +35,18 @@ export function Hero() {
               NOVERA combines modern property marketing, intelligent matching and seamless
               property discovery to connect people with properties that fit.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8">
               <Button href="/search" size="lg">
-                Find a property
-              </Button>
-              <Button href="/for-owners" variant="ghost" size="lg" className="border-white/30 text-white hover:border-white">
-                Get your property moving
+                Find your property
               </Button>
             </div>
             <Button
-              href="/how-it-works"
+              href="/for-owners"
               variant="ghost"
               size="sm"
-              className="mt-4 border-transparent px-0 text-white/60 hover:text-white"
+              className="mt-5 border-transparent px-0 text-white/60 hover:text-white"
             >
-              Talk to NOVERA →
+              Own or manage property? Get it moving →
             </Button>
           </div>
 
@@ -58,15 +54,12 @@ export function Hero() {
             <div className="overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
               <div className="relative aspect-[4/3]">
                 <PropertyArt image={featured.images[0]} priority />
-                <div className="absolute left-4 top-4">
-                  <DemoBadge />
-                </div>
               </div>
               <div className="bg-white p-5">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-graphite">{featured.title}</p>
                   <span className="rounded-full bg-signal-tint px-2.5 py-1 text-xs font-semibold text-signal-dark">
-                    94% match
+                    {featured.district}
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-muted">

@@ -13,12 +13,16 @@ export function ContactModal({
 }: {
   open: boolean;
   onClose: () => void;
-  propertyTitle: string;
+  /** Omit for a general "Contact NOVERA" enquiry not tied to one property. */
+  propertyTitle?: string;
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(`Hi, I'm interested in ${propertyTitle}.`);
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState(
+    propertyTitle ? `Hi, I'm interested in ${propertyTitle}.` : "",
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,8 +32,12 @@ export function ContactModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "contact",
-          payload: { propertyTitle, name, email, message },
+          source: "contact",
+          name,
+          email,
+          phone,
+          propertyTitle: propertyTitle ?? "General enquiry",
+          message,
         }),
       });
       if (!res.ok) throw new Error("Request failed");
@@ -40,14 +48,12 @@ export function ContactModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Contact about this property">
+    <Modal open={open} onClose={onClose} title={propertyTitle ? "Contact about this property" : "Contact NOVERA"}>
       {status === "sent" ? (
         <div className="text-center">
-          <p className="text-sm text-graphite">Thanks — your message has been recorded.</p>
+          <p className="text-sm text-graphite">Thanks — your message is with the NOVERA team.</p>
           <p className="mt-2 text-sm text-muted">
-            This is a demo enquiry flow: nothing is emailed yet because no owner contact
-            details are connected. A production version will notify the listing owner
-            directly.
+            We reply to every enquiry personally, usually within one business day.
           </p>
           <Button onClick={onClose} className="mt-6">
             Done
@@ -55,23 +61,34 @@ export function ContactModal({
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-muted">Your name</span>
+              <input
+                required
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-muted">Email</span>
+              <input
+                required
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
+              />
+            </label>
+          </div>
           <label className="block">
-            <span className="mb-1 block text-xs font-medium text-muted">Your name</span>
+            <span className="mb-1 block text-xs font-medium text-muted">Phone (optional)</span>
             <input
-              required
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
-            />
-          </label>
-          <label className="block">
-            <span className="mb-1 block text-xs font-medium text-muted">Email</span>
-            <input
-              required
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full rounded-xl border border-line px-3 py-2.5 text-sm outline-none focus:border-signal"
             />
           </label>

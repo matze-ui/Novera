@@ -33,14 +33,6 @@ export function Badge({
   );
 }
 
-export function DemoBadge({ className }: { className?: string }) {
-  return (
-    <Badge tone="warning" className={className}>
-      Demo
-    </Badge>
-  );
-}
-
 export function MatchBadge({ score, className }: { score: number; className?: string }) {
   return (
     <Badge tone="blue" className={className}>

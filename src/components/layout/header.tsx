@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/layout/logo";
+import { ContactNoveraButton } from "@/components/layout/contact-novera-button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -45,7 +46,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-5 md:flex">
+          <ContactNoveraButton />
           <Link
             href="/account"
             className="text-sm font-medium text-graphite/80 hover:text-graphite"
@@ -98,6 +100,7 @@ export function Header() {
             >
               Sign in
             </Link>
+            <ContactNoveraButton className="rounded-lg px-3 py-3 text-left text-base font-medium text-graphite hover:bg-line-soft" />
             <Button href="/for-owners/submit" className="mt-2 justify-center">
               Get your property moving
             </Button>

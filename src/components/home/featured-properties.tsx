@@ -12,9 +12,9 @@ export function FeaturedProperties() {
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
-            eyebrow="Recently added"
+            eyebrow="In Vienna now"
             title="A first look at what's on NOVERA"
-            description="Demo listings used to preview the product. Real inventory will replace these once owners and agents are onboarded."
+            description="A selection of current listings. Tell us what you're looking for and we'll match you personally as new properties come in."
           />
           <Link href="/search" className="text-sm font-semibold text-signal hover:text-signal-dark">
             View all properties →

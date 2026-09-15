@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/layout/logo";
 import { BUSINESS_EMAIL, BUSINESS_PHONE, mailtoHref, telHref } from "@/lib/config";
+import { ContactNoveraButton } from "@/components/layout/contact-novera-button";
 
 const columns = [
   {
@@ -45,21 +46,18 @@ export function Footer() {
               Property demand, delivered. NOVERA connects property seekers with properties
               that fit, and helps owners, agents and developers get properties moving.
             </p>
-            <div className="mt-5 space-y-1 text-sm">
-              {emailHref ? (
+            <div className="mt-5 space-y-2 text-sm">
+              {emailHref && (
                 <a href={emailHref} className="block text-graphite hover:text-signal">
                   {BUSINESS_EMAIL}
                 </a>
-              ) : (
-                <p className="text-muted-soft">Email — coming soon</p>
               )}
-              {phoneHref ? (
+              {phoneHref && (
                 <a href={phoneHref} className="block text-graphite hover:text-signal">
                   {BUSINESS_PHONE}
                 </a>
-              ) : (
-                <p className="text-muted-soft">Phone — coming soon</p>
               )}
+              <ContactNoveraButton className="block text-graphite underline decoration-line underline-offset-4 hover:text-signal" />
             </div>
           </div>
 
@@ -80,7 +78,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-xs text-muted-soft sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} NOVERA. All demo content is clearly labeled.</p>
+          <p>&copy; {new Date().getFullYear()} NOVERA.</p>
           <p>Vienna, Austria</p>
         </div>
       </div>

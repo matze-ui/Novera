@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
-import { Badge, DemoBadge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Gallery } from "@/components/property/gallery";
 import { MatchBreakdown } from "@/components/property/match-breakdown";
 import { PropertyActions } from "@/components/property/property-actions";
@@ -26,7 +26,7 @@ export async function generateMetadata({
 
   return {
     title: `${property.title} — ${property.district}, ${property.city}`,
-    description: `${propertyTypeLabel(property.propertyType)} in ${property.district}, ${property.city}. ${property.bedrooms} bed, ${formatSize(property.size)}, ${formatPrice(property)}. Demo listing.`,
+    description: `${propertyTypeLabel(property.propertyType)} in ${property.district}, ${property.city}. ${property.bedrooms} bed, ${formatSize(property.size)}, ${formatPrice(property)}.`,
     alternates: { canonical: `/properties/${property.slug}` },
     openGraph: {
       title: property.title,
@@ -96,7 +96,6 @@ export default async function PropertyDetailPage({
             <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="mb-2 flex items-center gap-2">
-                  <DemoBadge />
                   <Badge tone="outline">{property.listingType === "rent" ? "Rent" : "Buy"}</Badge>
                 </div>
                 <h1 className="text-2xl font-semibold text-graphite sm:text-3xl">
@@ -144,11 +143,11 @@ export default async function PropertyDetailPage({
 
             <MatchBreakdown score={score} breakdown={breakdown} />
             <p className="text-xs text-muted-soft">
-              Example match shown against typical sample preferences.{" "}
-              <Link href="/match" className="text-signal hover:text-signal-dark">
+              General relevance score.{" "}
+              <Link href="/match" className="font-medium text-signal hover:text-signal-dark">
                 Run NOVERA Match
               </Link>{" "}
-              with your own preferences for a personalized score.
+              with your own preferences for a score based on what you actually need.
             </p>
           </div>
         </div>
@@ -163,6 +162,24 @@ export default async function PropertyDetailPage({
             </div>
           </section>
         )}
+
+        <section className="mt-16 rounded-2xl bg-graphite px-6 py-10 text-center sm:px-10">
+          <h2 className="text-xl font-semibold text-white sm:text-2xl">
+            Not quite the right fit?
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-white/70">
+            Tell NOVERA what you actually need and a member of our team will follow up
+            personally as matching properties come up.
+          </p>
+          <div className="mt-6">
+            <Link
+              href="/match"
+              className="inline-flex items-center justify-center rounded-full bg-signal px-6 py-3 text-sm font-medium text-white hover:bg-signal-dark"
+            >
+              Tell us what you&rsquo;re looking for
+            </Link>
+          </div>
+        </section>
       </Container>
     </div>
   );

@@ -9,9 +9,11 @@ import { ALL_FEATURES } from "@/lib/search";
 import { DEFAULT_MATCH_PREFERENCES, matchProperties } from "@/lib/match";
 import { demoProperties } from "@/lib/demo-properties";
 import type { MatchPreferences } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, propertyTypeLabel } from "@/lib/utils";
 
-const steps = ["Location", "Budget", "Type", "Size & features", "Timing", "Your matches"];
+const steps = ["Location", "Budget", "Type", "Size & features", "Timing", "Your details", "Your matches"];
+const DETAILS_STEP = 5;
+const RESULTS_STEP = 6;
 
 const propertyTypes: Array<{ value: MatchPreferences["propertyType"]; label: string }> = [
   { value: "any", label: "Any type" },
@@ -25,11 +27,31 @@ const propertyTypes: Array<{ value: MatchPreferences["propertyType"]; label: str
 
 const timeframes = ["As soon as possible", "Within 3 months", "Within 6 months", "Just browsing"];
 
+function summarizePreferences(prefs: MatchPreferences): string {
+  const parts = [
+    prefs.listingType === "rent" ? "Rent" : "Buy",
+    prefs.location || "any location",
+    `€${prefs.minBudget.toLocaleString("en-US")}–€${prefs.maxBudget.toLocaleString("en-US")}`,
+    prefs.propertyType === "any" ? "any property type" : propertyTypeLabel(prefs.propertyType),
+    prefs.bedrooms === "any" ? "any bedrooms" : `${prefs.bedrooms}+ bed`,
+    `min ${prefs.minSize} m²`,
+    prefs.features.length > 0 ? prefs.features.join(", ") : "no specific features",
+    prefs.timeframe,
+  ];
+  return parts.join(" · ");
+}
+
+type SubmitStatus = "idle" | "submitting" | "error";
+
 export function MatchWizard() {
   const [step, setStep] = useState(0);
   const [prefs, setPrefs] = useState<MatchPreferences>(DEFAULT_MATCH_PREFERENCES);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [status, setStatus] = useState<SubmitStatus>("idle");
 
-  const isResults = step === steps.length - 1;
+  const isResults = step === RESULTS_STEP;
   const results = isResults ? matchProperties(prefs, demoProperties) : [];
 
   function next() {
@@ -46,6 +68,34 @@ export function MatchWizard() {
         ? p.features.filter((f) => f !== feature)
         : [...p.features, feature],
     }));
+  }
+
+  async function submitAndAdvance() {
+    setStatus("submitting");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "match",
+          name,
+          email,
+          phone,
+          propertyTitle: "NOVERA Match request",
+          requirements: summarizePreferences(prefs),
+        }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setStatus("idle");
+      next();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  function handleDetailsFormSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    void submitAndAdvance();
   }
 
   if (isResults) {
@@ -65,14 +115,16 @@ export function MatchWizard() {
         </div>
         <p className="mt-2 text-sm text-muted">
           {results.length} {results.length === 1 ? "property" : "properties"} ranked by fit to
-          what you told us.
+          what you told us. Our team has your details and will follow up personally if
+          something closer to your needs comes up.
         </p>
 
         {results.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-line p-10 text-center">
-            <p className="font-semibold text-graphite">No matches yet</p>
+            <p className="font-semibold text-graphite">Nothing matches yet</p>
             <p className="mt-2 text-sm text-muted">
-              Try widening your budget or choosing a different location.
+              We&rsquo;ve saved your requirements and will reach out as soon as something fits.
+              In the meantime, try widening your budget or location.
             </p>
           </div>
         ) : (
@@ -264,13 +316,70 @@ export function MatchWizard() {
             </div>
           </div>
         )}
+
+        {step === DETAILS_STEP && (
+          <form onSubmit={handleDetailsFormSubmit} className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold text-graphite">Where should we send your matches?</h2>
+              <p className="mt-2 text-sm text-muted">
+                A member of the NOVERA team will follow up personally, especially if nothing
+                on the site fits yet.
+              </p>
+            </div>
+            <label className="block">
+              <span className="mb-1 block text-sm font-medium text-graphite">Full name</span>
+              <input
+                required
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-xl border border-line px-4 py-3 text-sm outline-none focus:border-signal"
+              />
+            </label>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-1 block text-sm font-medium text-graphite">Email</span>
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-xl border border-line px-4 py-3 text-sm outline-none focus:border-signal"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-sm font-medium text-graphite">Phone (optional)</span>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full rounded-xl border border-line px-4 py-3 text-sm outline-none focus:border-signal"
+                />
+              </label>
+            </div>
+            {status === "error" && (
+              <p className="text-sm text-red-600" role="alert">
+                Something went wrong sending your details. Please try again.
+              </p>
+            )}
+          </form>
+        )}
       </div>
 
       <div className="mt-10 flex items-center justify-between">
         <Button variant="ghost" onClick={back} disabled={step === 0}>
           Back
         </Button>
-        <Button onClick={next}>{step === steps.length - 2 ? "See my matches" : "Continue"}</Button>
+        {step === DETAILS_STEP ? (
+          <Button
+            onClick={() => void submitAndAdvance()}
+            disabled={status === "submitting" || !name || !email}
+          >
+            {status === "submitting" ? "Sending…" : "See my matches"}
+          </Button>
+        ) : (
+          <Button onClick={next}>Continue</Button>
+        )}
       </div>
     </div>
   );

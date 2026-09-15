@@ -37,3 +37,13 @@ export function formatDate(iso: string): string {
     year: "numeric",
   });
 }
+
+/** Same as formatDate but with the full month name, for confirmation copy. */
+export function formatDateLong(iso: string): string {
+  if (!iso) return "date to be confirmed";
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}

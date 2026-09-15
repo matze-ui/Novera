@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { PropertyImage } from "@/lib/types";
 import { PropertyArt } from "@/components/property/property-art";
-import { DemoBadge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export function Gallery({ images }: { images: PropertyImage[] }) {
@@ -13,9 +12,6 @@ export function Gallery({ images }: { images: PropertyImage[] }) {
     <div>
       <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-line">
         <PropertyArt image={images[active]} priority />
-        <div className="absolute left-4 top-4">
-          <DemoBadge />
-        </div>
       </div>
       {images.length > 1 && (
         <div className="mt-3 flex gap-3 overflow-x-auto no-scrollbar">

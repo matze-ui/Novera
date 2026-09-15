@@ -41,7 +41,6 @@ export function PropertyActions({
       <ViewingRequestModal
         open={viewingOpen}
         onClose={() => setViewingOpen(false)}
-        propertySlug={slug}
         propertyTitle={title}
       />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} propertyTitle={title} />

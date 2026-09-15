@@ -25,7 +25,6 @@ export interface PropertyImage {
 export interface Property {
   id: string;
   slug: string;
-  isDemo: true;
   title: string;
   listingType: ListingType;
   propertyType: PropertyType;
@@ -83,28 +82,23 @@ export type LeadStatus =
   | "won"
   | "lost";
 
+/** Where a lead came from — every conversion point on the site funnels here. */
+export type LeadSource = "match" | "viewing-request" | "owner-submission" | "contact";
+
 export interface Lead {
   id: string;
+  source: LeadSource;
   name: string;
   email: string;
   phone: string;
+  /** Property title, submitted property summary, or "General enquiry". */
   propertyTitle: string;
+  /** Human-readable requirements summary (match preferences, submitted property details). */
+  requirements?: string;
+  message?: string;
   status: LeadStatus;
   createdAt: string;
   notes: string;
   lastContact: string | null;
   nextAction: string;
-}
-
-export type ViewingRequestStatus = "requested" | "cancelled";
-
-export interface ViewingRequest {
-  id: string;
-  propertySlug: string;
-  propertyTitle: string;
-  preferredDay: string;
-  preferredTime: string;
-  message: string;
-  status: ViewingRequestStatus;
-  createdAt: string;
 }

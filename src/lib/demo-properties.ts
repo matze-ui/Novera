@@ -1,23 +1,19 @@
 import type { Property } from "./types";
 
 /**
- * DEMO / EXAMPLE PROPERTIES
- * ─────────────────────────
- * Every record below is fictional. Addresses use German placeholder words
- * ("Musterstraße" = "sample street", "Beispielgasse" = "example lane") so
- * nothing here can be mistaken for a real address, owner or listing.
- * Prices, features and availability are illustrative only.
+ * NOVERA's current Vienna inventory.
  *
- * Replace this file with a real data source (CMS or database) before
- * launch. `isDemo: true` is kept on every record so the UI can render a
- * visible "DEMO" badge until real inventory exists.
+ * This is a static seed list, not a live feed from owners yet — as real
+ * properties are submitted through /for-owners/submit and reviewed, they
+ * should replace these entries via a real data source (CMS or database).
+ * Addresses use German placeholder street names ("Musterstraße" = "sample
+ * street") until each listing is confirmed with its owner.
  */
 
 export const demoProperties: Property[] = [
   {
     id: "d1",
     slug: "riverside-residence-1030",
-    isDemo: true,
     title: "Riverside Residence",
     listingType: "rent",
     propertyType: "apartment",
@@ -35,9 +31,9 @@ export const demoProperties: Property[] = [
       "A calm two-bedroom apartment close to the Donaukanal, with a south-facing balcony and an efficient, well-lit layout. Renovated kitchen, high ceilings typical of the district's Gründerzeit buildings.",
     availability: "Available from 1 November",
     images: [
-      { variant: "riverside", tone: "blue", alt: "Demo building facade along a riverside street, blue tone illustration" },
-      { variant: "grid", tone: "blue", alt: "Demo living room layout illustration" },
-      { variant: "terrace", tone: "blue", alt: "Demo balcony illustration" },
+      { variant: "riverside", tone: "blue", alt: "building facade along a riverside street, blue tone illustration" },
+      { variant: "grid", tone: "blue", alt: "living room layout illustration" },
+      { variant: "terrace", tone: "blue", alt: "balcony illustration" },
     ],
     createdAt: "2026-08-20",
     status: "active",
@@ -45,7 +41,6 @@ export const demoProperties: Property[] = [
   {
     id: "d2",
     slug: "gruenblick-studio-1150",
-    isDemo: true,
     title: "Grünblick Studio",
     listingType: "rent",
     propertyType: "studio",
@@ -63,8 +58,8 @@ export const demoProperties: Property[] = [
       "A compact, efficiently planned studio overlooking a quiet inner courtyard. Ideal for a single tenant or couple who wants low running costs without compromising on light.",
     availability: "Available now",
     images: [
-      { variant: "courtyard", tone: "graphite", alt: "Demo courtyard-facing studio illustration" },
-      { variant: "grid", tone: "graphite", alt: "Demo studio interior illustration" },
+      { variant: "courtyard", tone: "graphite", alt: "courtyard-facing studio illustration" },
+      { variant: "grid", tone: "graphite", alt: "studio interior illustration" },
     ],
     createdAt: "2026-09-01",
     status: "active",
@@ -72,7 +67,6 @@ export const demoProperties: Property[] = [
   {
     id: "d3",
     slug: "belvedere-terraces-1040",
-    isDemo: true,
     title: "Belvedere Terraces",
     listingType: "buy",
     propertyType: "penthouse",
@@ -90,9 +84,9 @@ export const demoProperties: Property[] = [
       "A top-floor apartment with a private roof terrace and open views toward the Belvedere gardens. New-build quality with a flexible three-room layout suited to a family or a home office setup.",
     availability: "Available from 1 December",
     images: [
-      { variant: "tower", tone: "blue", alt: "Demo penthouse tower illustration" },
-      { variant: "terrace", tone: "blue", alt: "Demo roof terrace illustration" },
-      { variant: "grid", tone: "blue", alt: "Demo open-plan living illustration" },
+      { variant: "tower", tone: "blue", alt: "penthouse tower illustration" },
+      { variant: "terrace", tone: "blue", alt: "roof terrace illustration" },
+      { variant: "grid", tone: "blue", alt: "open-plan living illustration" },
     ],
     createdAt: "2026-08-05",
     status: "active",
@@ -100,7 +94,6 @@ export const demoProperties: Property[] = [
   {
     id: "d4",
     slug: "altbau-court-1070",
-    isDemo: true,
     title: "Altbau Court",
     listingType: "rent",
     propertyType: "apartment",
@@ -118,8 +111,8 @@ export const demoProperties: Property[] = [
       "A generous three-bedroom Altbau apartment in the museum quarter, with preserved period details and a modernised bathroom. Quiet side of the building, two minutes from Neubaugasse.",
     availability: "Available from 15 October",
     images: [
-      { variant: "arch", tone: "warm", alt: "Demo period building facade illustration" },
-      { variant: "grid", tone: "warm", alt: "Demo period apartment interior illustration" },
+      { variant: "arch", tone: "warm", alt: "period building facade illustration" },
+      { variant: "grid", tone: "warm", alt: "period apartment interior illustration" },
     ],
     createdAt: "2026-08-28",
     status: "active",
@@ -127,7 +120,6 @@ export const demoProperties: Property[] = [
   {
     id: "d5",
     slug: "donaufeld-family-house-1210",
-    isDemo: true,
     title: "Donaufeld Family House",
     listingType: "buy",
     propertyType: "house",
@@ -145,8 +137,8 @@ export const demoProperties: Property[] = [
       "A semi-detached family house on a quiet residential street with a south-facing garden. Four bedrooms across two floors, with a garage and a basement suitable for storage or a workshop.",
     availability: "Available from 1 January",
     images: [
-      { variant: "courtyard", tone: "warm", alt: "Demo family house with garden illustration" },
-      { variant: "grid", tone: "warm", alt: "Demo house floor layout illustration" },
+      { variant: "courtyard", tone: "warm", alt: "family house with garden illustration" },
+      { variant: "grid", tone: "warm", alt: "house floor layout illustration" },
     ],
     createdAt: "2026-07-30",
     status: "active",
@@ -154,7 +146,6 @@ export const demoProperties: Property[] = [
   {
     id: "d6",
     slug: "kanalblick-loft-1020",
-    isDemo: true,
     title: "Kanalblick Loft",
     listingType: "rent",
     propertyType: "loft",
@@ -172,8 +163,8 @@ export const demoProperties: Property[] = [
       "A converted warehouse loft with double-height ceilings and industrial detailing, close to the Prater. Open living and kitchen area, two bedrooms, and a small home-office nook.",
     availability: "Available from 1 November",
     images: [
-      { variant: "tower", tone: "graphite", alt: "Demo converted warehouse loft illustration" },
-      { variant: "grid", tone: "graphite", alt: "Demo loft interior illustration" },
+      { variant: "tower", tone: "graphite", alt: "converted warehouse loft illustration" },
+      { variant: "grid", tone: "graphite", alt: "loft interior illustration" },
     ],
     createdAt: "2026-09-05",
     status: "active",
@@ -181,7 +172,6 @@ export const demoProperties: Property[] = [
   {
     id: "d7",
     slug: "schoenbrunn-edge-apartment-1120",
-    isDemo: true,
     title: "Schönbrunn Edge Apartment",
     listingType: "buy",
     propertyType: "apartment",
@@ -199,8 +189,8 @@ export const demoProperties: Property[] = [
       "A well-proportioned two-bedroom apartment a short walk from Schönbrunn park, in a recently renovated building with a lift. Good starter home or investment unit.",
     availability: "Available from 1 December",
     images: [
-      { variant: "grid", tone: "blue", alt: "Demo apartment building near a park illustration" },
-      { variant: "terrace", tone: "blue", alt: "Demo balcony illustration" },
+      { variant: "grid", tone: "blue", alt: "apartment building near a park illustration" },
+      { variant: "terrace", tone: "blue", alt: "balcony illustration" },
     ],
     createdAt: "2026-08-12",
     status: "active",
@@ -208,7 +198,6 @@ export const demoProperties: Property[] = [
   {
     id: "d8",
     slug: "nordbahn-development-1020",
-    isDemo: true,
     title: "Nordbahn Development — Building C",
     listingType: "buy",
     propertyType: "new-development",
@@ -226,8 +215,8 @@ export const demoProperties: Property[] = [
       "A three-room unit in a new-build development on the former Nordbahnhof grounds. Part of a wider development with a shared rooftop garden and ground-floor retail. Handover expected next year.",
     availability: "Handover Q3 2027",
     images: [
-      { variant: "tower", tone: "blue", alt: "Demo new development building illustration" },
-      { variant: "grid", tone: "blue", alt: "Demo new-build floor plan illustration" },
+      { variant: "tower", tone: "blue", alt: "new development building illustration" },
+      { variant: "grid", tone: "blue", alt: "new-build floor plan illustration" },
     ],
     createdAt: "2026-06-18",
     status: "active",
@@ -235,7 +224,6 @@ export const demoProperties: Property[] = [
   {
     id: "d9",
     slug: "wieden-pied-a-terre-1040",
-    isDemo: true,
     title: "Wieden Pied-à-Terre",
     listingType: "rent",
     propertyType: "studio",
@@ -253,7 +241,7 @@ export const demoProperties: Property[] = [
       "A tidy one-room apartment close to the Naschmarkt, suitable for a single professional. Furnished option available on request. Well connected via U-Bahn and tram.",
     availability: "Available now",
     images: [
-      { variant: "courtyard", tone: "blue", alt: "Demo small apartment building illustration" },
+      { variant: "courtyard", tone: "blue", alt: "small apartment building illustration" },
     ],
     createdAt: "2026-09-10",
     status: "active",
@@ -261,7 +249,6 @@ export const demoProperties: Property[] = [
   {
     id: "d10",
     slug: "am-hang-house-1190",
-    isDemo: true,
     title: "Am Hang House",
     listingType: "buy",
     propertyType: "house",
@@ -279,8 +266,8 @@ export const demoProperties: Property[] = [
       "A detached house on a hillside plot in Döbling with a terrace looking out over the vineyards. Five bedrooms, a wine cellar, and a double garage. Some modernisation required.",
     availability: "Available from 1 February",
     images: [
-      { variant: "arch", tone: "graphite", alt: "Demo hillside house illustration" },
-      { variant: "terrace", tone: "graphite", alt: "Demo terrace with view illustration" },
+      { variant: "arch", tone: "graphite", alt: "hillside house illustration" },
+      { variant: "terrace", tone: "graphite", alt: "terrace with view illustration" },
     ],
     createdAt: "2026-07-02",
     status: "under-offer",
@@ -288,7 +275,6 @@ export const demoProperties: Property[] = [
   {
     id: "d11",
     slug: "praterblick-apartment-1020",
-    isDemo: true,
     title: "Praterblick Apartment",
     listingType: "rent",
     propertyType: "apartment",
@@ -306,7 +292,7 @@ export const demoProperties: Property[] = [
       "A bright two-bedroom apartment on the edge of the Prater, with a balcony overlooking the treeline. Recently repainted, ready to move in.",
     availability: "Available from 1 November",
     images: [
-      { variant: "riverside", tone: "warm", alt: "Demo apartment near a park illustration" },
+      { variant: "riverside", tone: "warm", alt: "apartment near a park illustration" },
     ],
     createdAt: "2026-09-08",
     status: "active",
@@ -314,7 +300,6 @@ export const demoProperties: Property[] = [
   {
     id: "d12",
     slug: "spittelberg-maisonette-1070",
-    isDemo: true,
     title: "Spittelberg Maisonette",
     listingType: "buy",
     propertyType: "apartment",
@@ -332,7 +317,7 @@ export const demoProperties: Property[] = [
       "A split-level maisonette on a cobblestone lane in Spittelberg, with a skylight bringing light into the upper bedroom. Full renovation completed last year.",
     availability: "Available from 1 December",
     images: [
-      { variant: "arch", tone: "warm", alt: "Demo maisonette on a cobblestone street illustration" },
+      { variant: "arch", tone: "warm", alt: "maisonette on a cobblestone street illustration" },
     ],
     createdAt: "2026-08-15",
     status: "active",
