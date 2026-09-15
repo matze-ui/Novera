@@ -1,0 +1,19 @@
+services:
+  novera:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+      NEXT_PUBLIC_BUSINESS_EMAIL: ${NEXT_PUBLIC_BUSINESS_EMAIL}
+      NEXT_PUBLIC_BUSINESS_PHONE: ${NEXT_PUBLIC_BUSINESS_PHONE}
+      NEXT_PUBLIC_BUSINESS_ADDRESS: ${NEXT_PUBLIC_BUSINESS_ADDRESS}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    volumes:
+      # Persists captured leads across container restarts and redeploys.
+      - novera-data:/app/.data
+    restart: unless-stopped
+
+volumes:
+  novera-data:
