@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/*
+ * UNDERSTUDY — brand tokens
+ *
+ * The visual idea is a theatre: a dark stage lit by a warm spotlight, and
+ * the pale "script" pages the understudy learns from. Sections alternate
+ * between the two. Colour pairings below are contrast-checked:
+ *
+ *   spot     #e9b44c on stage #0b0c10 .......... 10.3:1
+ *   chalk    #e8e6e1 on stage #0b0c10 .......... 16.1:1
+ *   dim      #9ba0ab on stage #0b0c10 ........... 7.4:1
+ *   ink      #14151a on paper #f7f5f0 .......... 16.4:1
+ *   muted    #6b6e78 on paper #f7f5f0 ........... 4.7:1
+ *   spot-ink #8a5f14 on paper #f7f5f0 ........... 5.2:1
+ *
+ * Amber is never used for small text on a light background — that is what
+ * `spot-ink` is for. On light surfaces the raw `spot` is fills and rules only.
+ */
+@theme {
+  /* stage (dark surfaces) */
+  --color-stage: #0b0c10;
+  --color-stage-raised: #14161c;
+  --color-stage-high: #1c1f27;
+  --color-stage-line: #262a33;
+
+  /* paper (light surfaces) */
+  --color-paper: #f7f5f0;
+  --color-paper-raised: #ffffff;
+  --color-paper-sunk: #efece4;
+  --color-line: #e2ded4;
+  --color-line-soft: #ece9e1;
+
+  /* type */
+  --color-ink: #14151a;
+  --color-ink-soft: #40434d;
+  --color-muted: #6b6e78;
+  --color-chalk: #e8e6e1;
+  --color-dim: #9ba0ab;
+
+  /* spotlight accent */
+  --color-spot: #e9b44c;
+  --color-spot-warm: #f2c572;
+  --color-spot-deep: #b8832a;
+  --color-spot-ink: #8a5f14;
+  --color-spot-tint: #fbf1dc;
+
+  /* "live" cue — used for running/success states */
+  --color-cue: #3f9d82;
+  --color-cue-bright: #5bc8af;
+  --color-cue-tint: #e4f4ef;
+
+  --color-alarm: #c4443a;
+
+  --container-page: 1200px;
+}
+
+/*
+ * Font families arrive as CSS variables set by next/font on <html>, so these
+ * must be `inline` — Tailwind emits var() references instead of resolving the
+ * value at build time.
+ */
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-instrument);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* the sticky header shouldn't cover anchored section headings */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-spot);
+  color: var(--color-stage);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-spot-deep);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* On dark sections the amber outline reads better than the deepened one. */
+.on-stage :focus-visible {
+  outline-color: var(--color-spot);
+}
+
+.u-container {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .u-container {
+    padding-inline: 2rem;
+  }
+}
+
+/* Display type wants tighter tracking than the sans at large sizes. */
+.u-display {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+
+/* Small uppercase label used above section headings — the "scene marker". */
+.u-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/*
+ * The spotlight wash behind the hero. Two offset radial gradients so the
+ * falloff isn't a perfect circle — a real stage light never is.
+ */
+.u-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 38rem at 50% -14%, rgb(233 180 76 / 0.16), transparent 62%),
+    radial-gradient(34rem 26rem at 76% 6%, rgb(233 180 76 / 0.07), transparent 66%);
+}
+
+/* Faint vertical rules, like the boards of a stage floor. */
+.u-boards::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to right,
+    rgb(255 255 255 / 0.035) 1px,
+    transparent 1px
+  );
+  background-size: 5.5rem 100%;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+@keyframes u-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.u-rise {
+  animation: u-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes u-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.u-pulse {
+  animation: u-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .u-rise,
+  .u-pulse {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
