@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Badge } from "@/components/ui/badge";
-import { BUSINESS_EMAIL, BUSINESS_PHONE, BUSINESS_ADDRESS, mailtoHref, telHref } from "@/lib/config";
+import {
+  BUSINESS_ADDRESS,
+  BUSINESS_AUTHORITY,
+  BUSINESS_CHAMBER,
+  BUSINESS_EMAIL,
+  BUSINESS_LEGAL_NAME,
+  BUSINESS_PHONE,
+  BUSINESS_REGISTER,
+  BUSINESS_REPRESENTATIVE,
+  BUSINESS_VAT_ID,
+  LEGAL_NOTICE_IS_COMPLETE,
+  mailtoHref,
+  telHref,
+} from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -9,65 +22,73 @@ export const metadata: Metadata = {
   alternates: { canonical: "/impressum" },
 };
 
+const MISSING = "[To be added]";
+
 export default function ImpressumPage() {
+  const emailHref = mailtoHref(BUSINESS_EMAIL);
+  const phoneHref = telHref(BUSINESS_PHONE);
+
   return (
     <div className="py-14">
       <Container className="max-w-2xl">
         <div className="mb-6 flex items-center gap-3">
           <h1 className="text-2xl font-semibold text-graphite">Impressum</h1>
-          <Badge tone="warning">Draft — pending registration</Badge>
+          {!LEGAL_NOTICE_IS_COMPLETE && <Badge tone="warning">Draft — pending registration</Badge>}
         </div>
 
+        {!LEGAL_NOTICE_IS_COMPLETE && (
+          <p className="mb-8 text-sm leading-relaxed text-muted">
+            NOVERA has not yet been registered as a legal entity in Austria. The information
+            below is a placeholder structure for the legal notice required under Austrian law
+            (§ 5 ECG / § 25 Mediengesetz) and must be completed with accurate, verified
+            details once a legal entity exists.
+          </p>
+        )}
+
         <p className="mb-8 text-sm leading-relaxed text-muted">
-          NOVERA is currently a concept in development and has not yet been registered as a
-          legal entity in Austria. The information below is a placeholder structure for the
-          legal notice required under Austrian law (§ 5 ECG / § 25 Mediengesetz) and must be
-          completed with accurate, verified details once a legal entity exists.
+          Information required under § 5 ECG and § 25 Mediengesetz.
         </p>
 
         <dl className="space-y-5 text-sm">
-          <Field label="Company name / legal form">
-            [To be added once the company is registered]
-          </Field>
-          <Field label="Commercial register number (FN)">
-            [To be added once the company is registered]
-          </Field>
-          <Field label="VAT / UID number">[To be added once the company is registered]</Field>
-          <Field label="Registered address">
-            {BUSINESS_ADDRESS ?? "[To be added once the company is registered]"}
-          </Field>
+          <Field label="Company name / legal form">{BUSINESS_LEGAL_NAME ?? MISSING}</Field>
+          {BUSINESS_REGISTER && (
+            <Field label="Commercial register">{BUSINESS_REGISTER}</Field>
+          )}
+          {BUSINESS_VAT_ID && <Field label="VAT / UID number">{BUSINESS_VAT_ID}</Field>}
+          <Field label="Registered address">{BUSINESS_ADDRESS ?? MISSING}</Field>
           <Field label="Managing director / responsible person">
-            [To be added once the company is registered]
+            {BUSINESS_REPRESENTATIVE ?? MISSING}
           </Field>
           <Field label="Email">
-            {mailtoHref(BUSINESS_EMAIL) ? (
-              <a href={mailtoHref(BUSINESS_EMAIL)!} className="text-signal hover:text-signal-dark">
+            {emailHref ? (
+              <a href={emailHref} className="text-signal hover:text-signal-dark">
                 {BUSINESS_EMAIL}
               </a>
             ) : (
-              "[To be added]"
+              MISSING
             )}
           </Field>
-          <Field label="Phone">
-            {telHref(BUSINESS_PHONE) ? (
-              <a href={telHref(BUSINESS_PHONE)!} className="text-signal hover:text-signal-dark">
+          {phoneHref && (
+            <Field label="Phone">
+              <a href={phoneHref} className="text-signal hover:text-signal-dark">
                 {BUSINESS_PHONE}
               </a>
-            ) : (
-              "[To be added]"
-            )}
-          </Field>
-          <Field label="Regulatory authority">[To be added, if applicable]</Field>
-          <Field label="Dispute resolution (EU ODR)">
-            [To be added once the company is registered — a link to the EU Online Dispute
-            Resolution platform will go here if applicable]
+            </Field>
+          )}
+          {BUSINESS_CHAMBER && <Field label="Chamber membership">{BUSINESS_CHAMBER}</Field>}
+          {BUSINESS_AUTHORITY && <Field label="Regulatory authority">{BUSINESS_AUTHORITY}</Field>}
+          <Field label="Business purpose">
+            An online platform that connects property seekers with properties that fit, and
+            helps owners, agents and developers reach them.
           </Field>
         </dl>
 
-        <p className="mt-10 text-xs text-muted-soft">
-          This page must be reviewed and finalized by qualified legal counsel before NOVERA
-          operates commercially in Austria.
-        </p>
+        {!LEGAL_NOTICE_IS_COMPLETE && (
+          <p className="mt-10 text-xs text-muted-soft">
+            This page must be reviewed and finalized by qualified legal counsel before NOVERA
+            operates commercially in Austria.
+          </p>
+        )}
       </Container>
     </div>
   );
