@@ -1,0 +1,84 @@
+name: Understudy → GitHub Pages
+
+# Publishes the landing page to GitHub Pages.
+#
+# Manual trigger ONLY, on purpose. Putting a page on the public internet is
+# the repository owner's call, so this never fires on its own — someone has
+# to press "Run workflow". Change to `on: push` only if you want every commit
+# to main to republish automatically.
+#
+# One-time setup: Settings -> Pages -> Source: "GitHub Actions".
+#
+# Pages is static-only, so the API route, /admin and the middleware are
+# stripped from a throwaway copy by scripts-static-export.sh. The waitlist
+# therefore does not collect sign-ups here — the forms say so.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: understudy-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: understudy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: understudy/package-lock.json
+
+      - run: npm ci
+
+      - name: Build static export
+        env:
+          # Project sites live at /<repo>, so assets need that prefix or
+          # every one of them 404s.
+          BASE_PATH: /${{ github.event.repository.name }}
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: ./scripts-static-export.sh
+
+      - name: Fail if the export looks empty
+        run: |
+          test -s out/index.html || { echo "::error::out/index.html missing or empty"; exit 1; }
+          grep -q "Understudy" out/index.html || { echo "::error::export does not contain the page content"; exit 1; }
+          echo "Export looks good: $(find out -type f | wc -l) files"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: understudy/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Confirm the page is actually reachable
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}"
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L "$url")
+            echo "attempt $i: $url -> $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 10
+          done
+          echo "::error::Page did not return 200 after the deploy."
+          exit 1
