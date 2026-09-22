@@ -32,8 +32,8 @@ function RehearsalPanel() {
         <div className="rounded-xl border border-stage-line/70 bg-stage p-5 sm:p-7">
           <div className="flex items-center justify-between gap-4 border-b border-stage-line pb-4">
             <p className="u-eyebrow text-dim">Scene 03 — Supplier invoices</p>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-cue/15 px-2.5 py-1 text-[0.6875rem] font-medium text-cue-bright">
-              <span className="u-pulse h-1.5 w-1.5 rounded-full bg-cue-bright" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-spot/15 px-2.5 py-1 text-[0.6875rem] font-medium text-spot">
+              <span className="u-pulse h-1.5 w-1.5 rounded-full bg-spot" />
               Live
             </span>
           </div>

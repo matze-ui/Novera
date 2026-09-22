@@ -3,54 +3,74 @@
 /*
  * UNDERSTUDY — brand tokens
  *
- * The visual idea is a theatre: a dark stage lit by a warm spotlight, and
- * the pale "script" pages the understudy learns from. Sections alternate
- * between the two. Colour pairings below are contrast-checked:
+ * Red, blue and white. The theatre reading still holds: a deep navy stage,
+ * white light and type, and red for anything live or calling for attention.
+ * Each colour has one job, so nothing competes:
  *
- *   spot     #e9b44c on stage #0b0c10 .......... 10.3:1
- *   chalk    #e8e6e1 on stage #0b0c10 .......... 16.1:1
- *   dim      #9ba0ab on stage #0b0c10 ........... 7.4:1
- *   ink      #14151a on paper #f7f5f0 .......... 16.4:1
- *   muted    #6b6e78 on paper #f7f5f0 ........... 4.7:1
- *   spot-ink #8a5f14 on paper #f7f5f0 ........... 5.2:1
+ *   navy   the ground — dark sections, and the focus/confirm blue
+ *   red    the spotlight — eyebrows, emphasis, "on air", the primary button
+ *   white  type on the stage, and the light sections
  *
- * Amber is never used for small text on a light background — that is what
- * `spot-ink` is for. On light surfaces the raw `spot` is fills and rules only.
+ * Colour pairings below are contrast-checked (WCAG 2.1, sRGB):
+ *
+ *   chalk      #eef2fa on stage #0b1226 .......... 16.6:1
+ *   dim        #9aa6c4 on stage #0b1226 ........... 7.6:1
+ *   spot       #f9484d on stage #0b1226 ........... 5.4:1
+ *   cue-bright #6ea8ff on stage #0b1226 ........... 7.7:1
+ *   alarm-lit  #ff8a8a on stage #0b1226 ........... 8.2:1
+ *   ink        #0f1830 on paper #ffffff .......... 17.6:1
+ *   muted      #5f6a85 on paper #ffffff ........... 5.4:1
+ *   spot-ink   #b3122c on paper #ffffff ........... 6.9:1
+ *   spot-deep  #c8102e on paper #ffffff ........... 5.9:1
+ *   cue        #2563eb on paper #ffffff ........... 5.2:1
+ *   cue-ink    #1d4ed8 on cue-tint #e8effd ......... 5.8:1
+ *   white text on spot-solid #dc2338 ............... 4.8:1
+ *   spot-solid #dc2338 against stage (UI shape) .... 3.9:1
+ *
+ * Bright red (`spot`) is for dark surfaces only — on white it would fail, so
+ * `spot-ink` carries red text there and `spot-deep` carries red fills. The
+ * primary button is `spot-solid`, the one red dark enough to hold white text
+ * while still reading as a shape against the navy.
  */
 @theme {
-  /* stage (dark surfaces) */
-  --color-stage: #0b0c10;
-  --color-stage-raised: #14161c;
-  --color-stage-high: #1c1f27;
-  --color-stage-line: #262a33;
+  /* stage — deep navy, the dark surfaces */
+  --color-stage: #0b1226;
+  --color-stage-raised: #121a33;
+  --color-stage-high: #1a2442;
+  --color-stage-line: #273256;
 
-  /* paper (light surfaces) */
-  --color-paper: #f7f5f0;
+  /* paper — white, the light surfaces */
+  --color-paper: #ffffff;
   --color-paper-raised: #ffffff;
-  --color-paper-sunk: #efece4;
-  --color-line: #e2ded4;
-  --color-line-soft: #ece9e1;
+  --color-paper-sunk: #f1f5fb;
+  --color-line: #dbe2ee;
+  --color-line-soft: #e9edf5;
 
   /* type */
-  --color-ink: #14151a;
-  --color-ink-soft: #40434d;
-  --color-muted: #6b6e78;
-  --color-chalk: #e8e6e1;
-  --color-dim: #9ba0ab;
+  --color-ink: #0f1830;
+  --color-ink-soft: #3a4560;
+  --color-muted: #5f6a85;
+  --color-chalk: #eef2fa;
+  --color-dim: #9aa6c4;
 
-  /* spotlight accent */
-  --color-spot: #e9b44c;
-  --color-spot-warm: #f2c572;
-  --color-spot-deep: #b8832a;
-  --color-spot-ink: #8a5f14;
-  --color-spot-tint: #fbf1dc;
+  /* red — the spotlight accent */
+  --color-spot: #f9484d;
+  --color-spot-warm: #ff6b70;
+  --color-spot-solid: #dc2338;
+  --color-spot-deep: #c8102e;
+  --color-spot-ink: #b3122c;
+  --color-spot-tint: #fdeced;
 
-  /* "live" cue — used for running/success states */
-  --color-cue: #3f9d82;
-  --color-cue-bright: #5bc8af;
-  --color-cue-tint: #e4f4ef;
+  /* blue — focus, links and confirmation */
+  --color-cue: #2563eb;
+  --color-cue-bright: #6ea8ff;
+  --color-cue-ink: #1d4ed8;
+  --color-cue-tint: #e8effd;
 
-  --color-alarm: #c4443a;
+  /* errors. Red is the brand colour, so these are tuned per surface rather
+     than sharing one value that would be unreadable on one of them. */
+  --color-alarm: #b3122c;
+  --color-alarm-lit: #ff8a8a;
 
   --container-page: 1200px;
 }
@@ -81,19 +101,19 @@ body {
 }
 
 ::selection {
-  background: var(--color-spot);
-  color: var(--color-stage);
+  background: var(--color-spot-solid);
+  color: #ffffff;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-spot-deep);
+  outline: 2px solid var(--color-cue);
   outline-offset: 2px;
   border-radius: 3px;
 }
 
-/* On dark sections the amber outline reads better than the deepened one. */
+/* The deep blue disappears on navy; the lit blue is 7.7:1 there. */
 .on-stage :focus-visible {
-  outline-color: var(--color-spot);
+  outline-color: var(--color-cue-bright);
 }
 
 .u-container {
@@ -135,8 +155,8 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(60rem 38rem at 50% -14%, rgb(233 180 76 / 0.16), transparent 62%),
-    radial-gradient(34rem 26rem at 76% 6%, rgb(233 180 76 / 0.07), transparent 66%);
+    radial-gradient(60rem 38rem at 50% -14%, rgb(110 168 255 / 0.15), transparent 62%),
+    radial-gradient(34rem 26rem at 76% 6%, rgb(249 72 77 / 0.10), transparent 66%);
 }
 
 /* Faint vertical rules, like the boards of a stage floor. */

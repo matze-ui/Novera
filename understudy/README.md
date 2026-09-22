@@ -106,20 +106,34 @@ work without it.
 
 ## Brand
 
-The visual idea is a theatre: a dark stage lit by a warm spotlight, and the
-pale script pages the understudy learns from. Sections alternate between the
-two.
+Red, blue and white. The theatre reading still holds: a deep navy stage, white
+light and type, and red for anything live or calling for attention. Sections
+alternate between the navy stage and the white script pages.
 
-| Token   | Value     | Use                                    |
-| ------- | --------- | -------------------------------------- |
-| `stage` | `#0b0c10` | dark section background                |
-| `paper` | `#f7f5f0` | light section background               |
-| `spot`  | `#e9b44c` | spotlight amber — the single accent    |
-| `cue`   | `#3f9d82` | "live"/success states                  |
+Each colour has one job, so nothing competes:
 
-Contrast pairings are checked and documented at the top of `globals.css`.
-Amber is never used for small text on a light background — `spot-ink`
-(`#8a5f14`, 5.2:1 on paper) exists for that.
+| Token        | Value     | Use                                               |
+| ------------ | --------- | ------------------------------------------------- |
+| `stage`      | `#0b1226` | deep navy — dark section background               |
+| `paper`      | `#ffffff` | white — light section background                  |
+| `paper-sunk` | `#f1f5fb` | pale blue — the alternating light section         |
+| `spot`       | `#f9484d` | red accent on dark: eyebrows, emphasis, "on air"  |
+| `spot-solid` | `#dc2338` | the primary button (white text)                   |
+| `spot-ink`   | `#b3122c` | red text on white                                 |
+| `cue`        | `#2563eb` | blue — focus rings, links, confirmation           |
+
+Contrast pairings are checked and documented at the top of `globals.css`, and
+every one passes WCAG AA. Two rules keep it honest:
+
+- **Bright red is for dark surfaces only.** On white it fails, so `spot-ink`
+  carries red text there and `spot-deep` carries red fills.
+- **The primary button is `spot-solid`** — the one red dark enough to hold
+  white text at 4.5:1 while still reading as a shape against the navy.
+
+Red is the brand colour *and* the error colour, so error text is tuned per
+surface (`alarm` on white, `alarm-lit` on navy) rather than sharing one value
+that would be unreadable on one of them. Success states are blue, not red, so
+a confirmation never reads as a failure.
 
 Type: Instrument Serif for display, Inter for body, JetBrains Mono for the
 small uppercase labels and log-style detail lines.

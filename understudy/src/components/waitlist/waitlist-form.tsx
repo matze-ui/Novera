@@ -69,7 +69,7 @@ export function WaitlistForm({
         className={cn(
           "rounded-2xl border px-5 py-5",
           onStage
-            ? "border-spot/35 bg-spot/[0.08]"
+            ? "border-cue-bright/35 bg-cue-bright/[0.10]"
             : "border-cue/30 bg-cue-tint",
           className,
         )}
@@ -80,7 +80,7 @@ export function WaitlistForm({
           <span
             className={cn(
               "mt-1 h-2 w-2 shrink-0 rounded-full",
-              onStage ? "bg-spot" : "bg-cue",
+              onStage ? "bg-cue-bright" : "bg-cue",
             )}
           />
           <div>
@@ -92,7 +92,7 @@ export function WaitlistForm({
             >
               {alreadyJoined ? "You're already on the list." : "You're on the list."}
               {position ? (
-                <span className={onStage ? "text-spot" : "text-spot-ink"}>
+                <span className={onStage ? "text-cue-bright" : "text-cue-ink"}>
                   {" "}
                   No. {position}.
                 </span>
@@ -111,8 +111,8 @@ export function WaitlistForm({
   const fieldBase = cn(
     "w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors",
     onStage
-      ? "border-stage-line bg-stage-raised text-chalk placeholder:text-dim/70 focus:border-spot"
-      : "border-line bg-paper-raised text-ink placeholder:text-muted/70 focus:border-spot-deep",
+      ? "border-stage-line bg-stage-raised text-chalk placeholder:text-dim/70 focus:border-cue-bright"
+      : "border-line bg-paper-raised text-ink placeholder:text-muted/70 focus:border-cue",
   );
 
   return (
@@ -244,7 +244,10 @@ export function WaitlistForm({
         <p
           id={`${id}-error`}
           role="alert"
-          className="mt-2.5 text-xs font-medium text-alarm"
+          className={cn(
+            "mt-2.5 text-xs font-medium",
+            onStage ? "text-alarm-lit" : "text-alarm",
+          )}
         >
           {error}
         </p>
