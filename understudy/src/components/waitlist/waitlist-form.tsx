@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { WaitlistSource } from "@/lib/types";
+import { WAITLIST_ENDPOINT } from "@/lib/config";
 
 type Status = "idle" | "submitting" | "joined" | "error";
 
@@ -40,7 +41,7 @@ export function WaitlistForm({
     setError("");
 
     try {
-      const res = await fetch("/api/waitlist", {
+      const res = await fetch(WAITLIST_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, company, useCase, website, source }),
@@ -61,6 +62,28 @@ export function WaitlistForm({
       setError("We couldn't reach the server. Please check your connection.");
       setStatus("error");
     }
+  }
+
+  // No endpoint configured (static build): say so plainly instead of
+  // rendering an input that would throw on submit.
+  if (!WAITLIST_ENDPOINT) {
+    return (
+      <div
+        className={cn(
+          "rounded-2xl border px-5 py-5",
+          onStage ? "border-stage-line bg-stage-raised" : "border-line bg-paper-sunk",
+          className,
+        )}
+      >
+        <p className={cn("text-sm font-semibold", onStage ? "text-chalk" : "text-ink")}>
+          The waitlist opens shortly.
+        </p>
+        <p className={cn("mt-1 text-sm", onStage ? "text-dim" : "text-muted")}>
+          This preview isn&rsquo;t collecting sign-ups yet — we&rsquo;d rather say so
+          than take your address and lose it.
+        </p>
+      </div>
+    );
   }
 
   if (status === "joined") {

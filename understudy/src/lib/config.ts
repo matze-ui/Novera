@@ -20,3 +20,15 @@ export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
 export const COMPANY_LEGAL_NAME = process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME || "";
 
 export const LAUNCH_WINDOW = "first pilots, Q1 2027";
+
+/**
+ * Where the waitlist forms post.
+ *
+ * Defaults to this app's own API route. Set it to an external form endpoint
+ * when the app is deployed somewhere that can't run server code (a static
+ * host such as GitHub Pages), or set it to an empty string to render the
+ * forms as "not open yet" — which is what a static build does, rather than
+ * showing an input that silently fails.
+ */
+export const WAITLIST_ENDPOINT =
+  process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ?? "/api/waitlist";
