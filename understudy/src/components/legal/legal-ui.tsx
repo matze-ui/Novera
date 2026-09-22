@@ -43,11 +43,10 @@ export function LegalPage({
                 This page is not complete yet.
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-                Missing: <span className="font-mono">{incomplete.join(", ")}</span>. An
-                Austrian site offering a commercial service needs these before it takes
-                real traffic. Set the matching{" "}
-                <span className="font-mono">NEXT_PUBLIC_LEGAL_*</span> environment
-                variables.
+                Missing: <span className="font-mono">{incomplete.join(", ")}</span>.
+                Understudy is not yet registered as a company, so these details do not
+                exist yet. They will be here before the site takes real traffic, and
+                nothing on it can be bought in the meantime.
               </p>
             </div>
           )}

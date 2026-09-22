@@ -5,6 +5,18 @@
  * mailto: link or a fake address.
  */
 
+/**
+ * A value that can be committed here or overridden per deployment.
+ *
+ * The static Pages build passes no NEXT_PUBLIC_LEGAL_* variables (see
+ * scripts-static-export.sh), so anything left blank below is blank on the
+ * published site. Commit the real value as the second argument and it ships;
+ * an environment variable still wins where one is set.
+ */
+function configured(fromEnv: string | undefined, committed = ""): string {
+  return fromEnv?.trim() || committed;
+}
+
 export const SITE_NAME = "Understudy";
 export const SITE_TAGLINE = "It learns the job. Then it does the job.";
 
@@ -35,34 +47,36 @@ export const WAITLIST_ENDPOINT =
 
 /**
  * Company identity for the Impressum (§ 5 ECG, § 25 MedienG) and the privacy
- * policy. All of it is intentionally blank until real values exist — the
- * legal pages render a visible "not yet configured" marker for anything
- * missing rather than inventing plausible-looking company data, which on a
- * legal page would be worse than an obvious gap.
+ * policy. Anything still blank stays blank — the legal pages render a visible
+ * "not yet configured" marker for it rather than inventing plausible-looking
+ * company data, which on a legal page would be worse than an obvious gap.
  */
 export const LEGAL = {
   /** Registered name, or your own name if you trade as a sole proprietor. */
-  name: process.env.NEXT_PUBLIC_LEGAL_NAME || "",
+  name: configured(process.env.NEXT_PUBLIC_LEGAL_NAME),
   /** Street, postcode, city, country. */
-  address: process.env.NEXT_PUBLIC_LEGAL_ADDRESS || "",
-  email: process.env.NEXT_PUBLIC_LEGAL_EMAIL || "",
-  phone: process.env.NEXT_PUBLIC_LEGAL_PHONE || "",
+  address: configured(process.env.NEXT_PUBLIC_LEGAL_ADDRESS),
+  email: configured(process.env.NEXT_PUBLIC_LEGAL_EMAIL),
+  phone: configured(process.env.NEXT_PUBLIC_LEGAL_PHONE),
   /** VAT ID, e.g. ATU12345678. Only if VAT-registered. */
-  vatId: process.env.NEXT_PUBLIC_LEGAL_VAT_ID || "",
+  vatId: configured(process.env.NEXT_PUBLIC_LEGAL_VAT_ID),
   /** Firmenbuchnummer, e.g. FN 123456a. Only if entered in the register. */
-  registerNumber: process.env.NEXT_PUBLIC_LEGAL_REGISTER_NUMBER || "",
+  registerNumber: configured(process.env.NEXT_PUBLIC_LEGAL_REGISTER_NUMBER),
   /** Firmenbuchgericht, e.g. Handelsgericht Wien. */
-  registerCourt: process.env.NEXT_PUBLIC_LEGAL_REGISTER_COURT || "",
+  registerCourt: configured(process.env.NEXT_PUBLIC_LEGAL_REGISTER_COURT),
   /** Person(s) authorised to represent the company. */
-  representative: process.env.NEXT_PUBLIC_LEGAL_REPRESENTATIVE || "",
+  representative: configured(process.env.NEXT_PUBLIC_LEGAL_REPRESENTATIVE),
   /** Chamber membership, e.g. WKO Wien. */
-  chamber: process.env.NEXT_PUBLIC_LEGAL_CHAMBER || "",
+  chamber: configured(process.env.NEXT_PUBLIC_LEGAL_CHAMBER),
   /** Trade authority, e.g. Magistratisches Bezirksamt des I. Bezirks. */
-  authority: process.env.NEXT_PUBLIC_LEGAL_AUTHORITY || "",
+  authority: configured(process.env.NEXT_PUBLIC_LEGAL_AUTHORITY),
   /** Where the waitlist database physically lives, e.g. "Frankfurt, Germany". */
-  dataRegion: process.env.NEXT_PUBLIC_LEGAL_DATA_REGION || "",
-  /** Who hosts the site, e.g. "Vercel Inc.". Named as a processor. */
-  hostingProvider: process.env.NEXT_PUBLIC_LEGAL_HOSTING_PROVIDER || "",
+  dataRegion: configured(process.env.NEXT_PUBLIC_LEGAL_DATA_REGION),
+  /** Who hosts the site. Named as a processor in the privacy policy. */
+  hostingProvider: configured(
+    process.env.NEXT_PUBLIC_LEGAL_HOSTING_PROVIDER,
+    "GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA",
+  ),
 } as const;
 
 /** The fields without which an Austrian Impressum is not valid. */
