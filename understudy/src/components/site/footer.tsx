@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { LogoMark } from "@/components/site/logo";
 import { CONTACT_EMAIL, COMPANY_LEGAL_NAME, SITE_NAME } from "@/lib/config";
@@ -78,8 +79,14 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-stage-line pt-6 text-xs text-dim sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {COMPANY_LEGAL_NAME || SITE_NAME}.
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>© {year} {COMPANY_LEGAL_NAME || SITE_NAME}.</span>
+            <Link href="/impressum" className="hover:text-spot">
+              Impressum
+            </Link>
+            <Link href="/datenschutz" className="hover:text-spot">
+              Privacy
+            </Link>
           </p>
           <p>
             Pre-launch. Nothing on this page is available to buy yet — the waitlist is
