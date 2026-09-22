@@ -60,11 +60,35 @@ real data source (CMS or database) as owners are onboarded through `/for-owners/
 
 Business contact details are intentionally unset until real ones exist — the site shows
 a working "Contact NOVERA" form instead of a dead link until you configure these (see
-`src/lib/config.ts`):
+`src/lib/config.ts`). All environment variables are documented in `.env.example` — copy
+it to `.env.local` for local development:
 
 ```
+DASHBOARD_USERNAME=
+DASHBOARD_PASSWORD=
 NEXT_PUBLIC_BUSINESS_EMAIL=
 NEXT_PUBLIC_BUSINESS_PHONE=
 NEXT_PUBLIC_BUSINESS_ADDRESS=
 NEXT_PUBLIC_SITE_URL=
 ```
+
+## Deploying
+
+The site needs a **persistent filesystem** for `.data/leads.json` — a regular VM or
+container host, not serverless/edge functions (Vercel, Cloudflare Workers, etc.), where
+the filesystem resets between requests. A `Dockerfile` and `docker-compose.yml` are
+included for exactly that:
+
+```bash
+cp .env.example .env   # fill in DASHBOARD_USERNAME/PASSWORD at minimum
+docker compose up --build -d
+```
+
+This builds the production image (`next build` with `output: "standalone"`), runs it on
+port 3000, and mounts a named volume at `/app/.data` so captured leads survive container
+restarts and redeploys. Without Docker, `npm run build && npm run start` works the same
+way as long as the process keeps running on the same machine/disk between requests.
+
+If you outgrow a single server, swap `src/lib/server/lead-store.ts` for a real database
+(Postgres, SQLite, etc.) — it only exports three functions (`addLead`, `getAllLeads`,
+`updateLead`), so the rest of the app doesn't need to change.
