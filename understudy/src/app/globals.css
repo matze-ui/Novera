@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/*
+ * UNDERSTUDY — brand tokens
+ *
+ * Red, blue and white. A navy stage, white light and type, and red for
+ * anything live or calling for attention:
+ *
+ *   navy   the ground — dark sections, and the focus/confirm blue
+ *   red    the spotlight — eyebrows, emphasis, "on air", the primary button
+ *   white  type on the stage, and the light sections
+ *
+ * A LIGHTER navy and a DARKER red pull against each other, because the red
+ * button has to clear 3:1 against the surface behind it while still holding
+ * white text at 4.5:1. That band closes as the navy lightens, and above
+ * roughly 2.1x the current navy no valid red exists at all. This palette
+ * sits at 1.52x, which leaves the reds room to darken. Don't lighten the
+ * navy further without re-checking every pairing below.
+ *
+ * Contrast-checked (WCAG 2.1, sRGB) — all 37 pairings pass:
+ *
+ *   chalk      #eef2fa on stage #0e1832 .......... 15.7:1
+ *   dim        #9aa6c4 on stage #0e1832 ........... 7.2:1
+ *   spot       #ef454a on stage #0e1832 ........... 4.7:1
+ *   cue-bright #6ea8ff on stage #0e1832 ........... 7.3:1
+ *   alarm-lit  #ff8a8a on stage #0e1832 ........... 7.7:1
+ *   ink        #0f1830 on paper #ffffff .......... 17.6:1
+ *   muted      #5f6a85 on paper #ffffff ........... 5.4:1
+ *   spot-ink   #9c0f22 on paper #ffffff ........... 8.4:1
+ *   spot-deep  #a80d24 on paper #ffffff ........... 7.6:1
+ *   cue        #2563eb on paper #ffffff ........... 5.2:1
+ *   cue-ink    #1d4ed8 on cue-tint #e8effd ........ 5.8:1
+ *   white text on spot-solid #d32236 .............. 5.2:1
+ *   white text on spot-hover #dc2338 .............. 4.8:1
+ *   spot-solid against stage (UI shape) ........... 3.4:1
+ *   spot-solid against stage-raised ............... 3.2:1
+ *
+ * Two rules keep this honest:
+ *   - Bright red (`spot`) is for dark surfaces only. On white it fails, so
+ *     `spot-ink` carries red text there and `spot-deep` carries red fills.
+ *   - The primary button LIGHTENS on hover (`spot-hover`). Darkening it
+ *     would drop its edge below 3:1 against the navy.
+ *
+ * `spot` as small text is only safe on `stage`, not on `stage-raised`
+ * (4.4:1 there) — on raised it is display-sized type only.
+ */
+@theme {
+  /* stage — navy, the dark surfaces */
+  --color-stage: #0e1832;
+  --color-stage-raised: #121d3d;
+  --color-stage-high: #182548;
+  --color-stage-line: #26325c;
+
+  /* paper — white, the light surfaces */
+  --color-paper: #ffffff;
+  --color-paper-raised: #ffffff;
+  --color-paper-sunk: #f1f5fb;
+  --color-line: #dbe2ee;
+  --color-line-soft: #e9edf5;
+
+  /* type */
+  --color-ink: #0f1830;
+  --color-ink-soft: #3a4560;
+  --color-muted: #5f6a85;
+  --color-chalk: #eef2fa;
+  --color-dim: #9aa6c4;
+
+  /* red — the spotlight accent */
+  --color-spot: #ef454a;
+  --color-spot-solid: #d32236;
+  --color-spot-hover: #dc2338;
+  --color-spot-deep: #a80d24;
+  --color-spot-ink: #9c0f22;
+  --color-spot-tint: #fce9eb;
+
+  /* blue — focus, links and confirmation */
+  --color-cue: #2563eb;
+  --color-cue-bright: #6ea8ff;
+  --color-cue-ink: #1d4ed8;
+  --color-cue-tint: #e8effd;
+
+  /* errors. Red is the brand colour, so these are tuned per surface rather
+     than sharing one value that would be unreadable on one of them. */
+  --color-alarm: #a51028;
+  --color-alarm-lit: #ff8a8a;
+
+  --container-page: 1200px;
+}
+
+/*
+ * Font families arrive as CSS variables set by next/font on <html>, so these
+ * must be `inline` — Tailwind emits var() references instead of resolving the
+ * value at build time.
+ */
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-instrument);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* the sticky header shouldn't cover anchored section headings */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-spot-solid);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cue);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* The deep blue disappears on navy; the lit blue is 7.7:1 there. */
+.on-stage :focus-visible {
+  outline-color: var(--color-cue-bright);
+}
+
+.u-container {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .u-container {
+    padding-inline: 2rem;
+  }
+}
+
+/* Display type wants tighter tracking than the sans at large sizes. */
+.u-display {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+
+/* Small uppercase label used above section headings — the "scene marker". */
+.u-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/*
+ * The spotlight wash behind the hero. Two offset radial gradients so the
+ * falloff isn't a perfect circle — a real stage light never is.
+ */
+.u-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 38rem at 50% -14%, rgb(110 168 255 / 0.13), transparent 62%),
+    radial-gradient(34rem 26rem at 76% 6%, rgb(239 69 74 / 0.09), transparent 66%);
+}
+
+/* Faint vertical rules, like the boards of a stage floor. */
+.u-boards::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to right,
+    rgb(255 255 255 / 0.035) 1px,
+    transparent 1px
+  );
+  background-size: 5.5rem 100%;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+@keyframes u-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.u-rise {
+  animation: u-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes u-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.u-pulse {
+  animation: u-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .u-rise,
+  .u-pulse {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
