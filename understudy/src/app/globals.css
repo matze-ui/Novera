@@ -3,41 +3,53 @@
 /*
  * UNDERSTUDY — brand tokens
  *
- * Red, blue and white. The theatre reading still holds: a deep navy stage,
- * white light and type, and red for anything live or calling for attention.
- * Each colour has one job, so nothing competes:
+ * Red, blue and white. A navy stage, white light and type, and red for
+ * anything live or calling for attention:
  *
  *   navy   the ground — dark sections, and the focus/confirm blue
  *   red    the spotlight — eyebrows, emphasis, "on air", the primary button
  *   white  type on the stage, and the light sections
  *
- * Colour pairings below are contrast-checked (WCAG 2.1, sRGB):
+ * A LIGHTER navy and a DARKER red pull against each other, because the red
+ * button has to clear 3:1 against the surface behind it while still holding
+ * white text at 4.5:1. That band closes as the navy lightens, and above
+ * roughly 2.1x the current navy no valid red exists at all. This palette
+ * sits at 1.52x, which leaves the reds room to darken. Don't lighten the
+ * navy further without re-checking every pairing below.
  *
- *   chalk      #eef2fa on stage #0b1226 .......... 16.6:1
- *   dim        #9aa6c4 on stage #0b1226 ........... 7.6:1
- *   spot       #f9484d on stage #0b1226 ........... 5.4:1
- *   cue-bright #6ea8ff on stage #0b1226 ........... 7.7:1
- *   alarm-lit  #ff8a8a on stage #0b1226 ........... 8.2:1
+ * Contrast-checked (WCAG 2.1, sRGB) — all 37 pairings pass:
+ *
+ *   chalk      #eef2fa on stage #0e1832 .......... 15.7:1
+ *   dim        #9aa6c4 on stage #0e1832 ........... 7.2:1
+ *   spot       #ef454a on stage #0e1832 ........... 4.7:1
+ *   cue-bright #6ea8ff on stage #0e1832 ........... 7.3:1
+ *   alarm-lit  #ff8a8a on stage #0e1832 ........... 7.7:1
  *   ink        #0f1830 on paper #ffffff .......... 17.6:1
  *   muted      #5f6a85 on paper #ffffff ........... 5.4:1
- *   spot-ink   #b3122c on paper #ffffff ........... 6.9:1
- *   spot-deep  #c8102e on paper #ffffff ........... 5.9:1
+ *   spot-ink   #9c0f22 on paper #ffffff ........... 8.4:1
+ *   spot-deep  #a80d24 on paper #ffffff ........... 7.6:1
  *   cue        #2563eb on paper #ffffff ........... 5.2:1
- *   cue-ink    #1d4ed8 on cue-tint #e8effd ......... 5.8:1
- *   white text on spot-solid #dc2338 ............... 4.8:1
- *   spot-solid #dc2338 against stage (UI shape) .... 3.9:1
+ *   cue-ink    #1d4ed8 on cue-tint #e8effd ........ 5.8:1
+ *   white text on spot-solid #d32236 .............. 5.2:1
+ *   white text on spot-hover #dc2338 .............. 4.8:1
+ *   spot-solid against stage (UI shape) ........... 3.4:1
+ *   spot-solid against stage-raised ............... 3.2:1
  *
- * Bright red (`spot`) is for dark surfaces only — on white it would fail, so
- * `spot-ink` carries red text there and `spot-deep` carries red fills. The
- * primary button is `spot-solid`, the one red dark enough to hold white text
- * while still reading as a shape against the navy.
+ * Two rules keep this honest:
+ *   - Bright red (`spot`) is for dark surfaces only. On white it fails, so
+ *     `spot-ink` carries red text there and `spot-deep` carries red fills.
+ *   - The primary button LIGHTENS on hover (`spot-hover`). Darkening it
+ *     would drop its edge below 3:1 against the navy.
+ *
+ * `spot` as small text is only safe on `stage`, not on `stage-raised`
+ * (4.4:1 there) — on raised it is display-sized type only.
  */
 @theme {
-  /* stage — deep navy, the dark surfaces */
-  --color-stage: #0b1226;
-  --color-stage-raised: #121a33;
-  --color-stage-high: #1a2442;
-  --color-stage-line: #273256;
+  /* stage — navy, the dark surfaces */
+  --color-stage: #0e1832;
+  --color-stage-raised: #121d3d;
+  --color-stage-high: #182548;
+  --color-stage-line: #26325c;
 
   /* paper — white, the light surfaces */
   --color-paper: #ffffff;
@@ -54,12 +66,12 @@
   --color-dim: #9aa6c4;
 
   /* red — the spotlight accent */
-  --color-spot: #f9484d;
-  --color-spot-warm: #ff6b70;
-  --color-spot-solid: #dc2338;
-  --color-spot-deep: #c8102e;
-  --color-spot-ink: #b3122c;
-  --color-spot-tint: #fdeced;
+  --color-spot: #ef454a;
+  --color-spot-solid: #d32236;
+  --color-spot-hover: #dc2338;
+  --color-spot-deep: #a80d24;
+  --color-spot-ink: #9c0f22;
+  --color-spot-tint: #fce9eb;
 
   /* blue — focus, links and confirmation */
   --color-cue: #2563eb;
@@ -69,7 +81,7 @@
 
   /* errors. Red is the brand colour, so these are tuned per surface rather
      than sharing one value that would be unreadable on one of them. */
-  --color-alarm: #b3122c;
+  --color-alarm: #a51028;
   --color-alarm-lit: #ff8a8a;
 
   --container-page: 1200px;
@@ -155,8 +167,8 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(60rem 38rem at 50% -14%, rgb(110 168 255 / 0.15), transparent 62%),
-    radial-gradient(34rem 26rem at 76% 6%, rgb(249 72 77 / 0.10), transparent 66%);
+    radial-gradient(60rem 38rem at 50% -14%, rgb(110 168 255 / 0.13), transparent 62%),
+    radial-gradient(34rem 26rem at 76% 6%, rgb(239 69 74 / 0.09), transparent 66%);
 }
 
 /* Faint vertical rules, like the boards of a stage floor. */

@@ -70,7 +70,7 @@ export function Hero() {
     <section className="on-stage u-spotlight u-boards relative overflow-hidden bg-stage pt-20 pb-24 sm:pt-28 sm:pb-32">
       <Container className="relative z-10">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="u-eyebrow u-rise inline-flex items-center gap-2 rounded-full border border-stage-line bg-stage-raised px-3.5 py-1.5 text-spot">
+          <p className="u-eyebrow u-rise inline-flex items-center gap-2 rounded-full border border-stage-line bg-stage px-3.5 py-1.5 text-spot">
             <span className="h-1.5 w-1.5 rounded-full bg-spot" />
             Pre-launch · {LAUNCH_WINDOW}
           </p>

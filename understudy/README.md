@@ -106,29 +106,44 @@ work without it.
 
 ## Brand
 
-Red, blue and white. The theatre reading still holds: a deep navy stage, white
-light and type, and red for anything live or calling for attention. Sections
-alternate between the navy stage and the white script pages.
-
-Each colour has one job, so nothing competes:
+Red, blue and white. A navy stage, white light and type, and red for anything
+live or calling for attention. Sections alternate between the navy stage and
+the white script pages.
 
 | Token        | Value     | Use                                               |
 | ------------ | --------- | ------------------------------------------------- |
-| `stage`      | `#0b1226` | deep navy — dark section background               |
+| `stage`      | `#0e1832` | navy — dark section background                    |
 | `paper`      | `#ffffff` | white — light section background                  |
 | `paper-sunk` | `#f1f5fb` | pale blue — the alternating light section         |
-| `spot`       | `#f9484d` | red accent on dark: eyebrows, emphasis, "on air"  |
-| `spot-solid` | `#dc2338` | the primary button (white text)                   |
-| `spot-ink`   | `#b3122c` | red text on white                                 |
+| `spot`       | `#ef454a` | red accent on dark: eyebrows, emphasis, "on air"  |
+| `spot-solid` | `#d32236` | the primary button (white text)                   |
+| `spot-ink`   | `#9c0f22` | red text on white                                 |
 | `cue`        | `#2563eb` | blue — focus rings, links, confirmation           |
 
-Contrast pairings are checked and documented at the top of `globals.css`, and
-every one passes WCAG AA. Two rules keep it honest:
+All 37 pairings are contrast-checked against WCAG AA and documented at the top
+of `globals.css`.
+
+### Why the navy can't get much lighter
+
+A lighter navy and a darker red pull against each other. The primary button
+has to clear **3:1** against the surface behind it while still holding white
+text at **4.5:1**, and that band closes as the navy lightens. Above roughly
+2.1x the current navy's luminance, **no valid red exists at all**. This
+palette sits at 1.52x, which is deliberately short of the ceiling so the reds
+have room to be dark.
+
+If you want a lighter navy, the red has to get lighter with it — re-run the
+pairings before shipping it.
+
+Three rules fall out of that:
 
 - **Bright red is for dark surfaces only.** On white it fails, so `spot-ink`
   carries red text there and `spot-deep` carries red fills.
-- **The primary button is `spot-solid`** — the one red dark enough to hold
-  white text at 4.5:1 while still reading as a shape against the navy.
+- **The primary button lightens on hover** (`spot-hover`). Darkening it would
+  drop its edge below 3:1 against the navy.
+- **`spot` as small text is only safe on `stage`, not `stage-raised`** (4.4:1
+  there). On raised surfaces it is display-sized type only — which is why the
+  hero's eyebrow pill sits on the stage rather than on a panel.
 
 Red is the brand colour *and* the error colour, so error text is tuned per
 surface (`alarm` on white, `alarm-lit` on navy) rather than sharing one value

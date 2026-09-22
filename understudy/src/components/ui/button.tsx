@@ -19,7 +19,7 @@ const sizes = {
  */
 function variantClasses(variant: Variant, onStage: boolean): string {
   if (variant === "primary") {
-    return "bg-spot-solid text-white hover:bg-spot-deep";
+    return "bg-spot-solid text-white hover:bg-spot-hover";
   }
   if (variant === "outline") {
     return onStage
