@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { addSignup } from "@/lib/server/waitlist-store";
+import { addSignup, StorageUnavailableError } from "@/lib/server/waitlist-store";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { LIMITS, WAITLIST_SOURCES, clamp, isValidEmail } from "@/lib/validate";
 import type { WaitlistSource } from "@/lib/types";
@@ -65,6 +65,15 @@ export async function POST(request: NextRequest) {
       alreadyJoined: result.alreadyJoined,
     });
   } catch (err) {
+    // Storage that cannot persist is a deployment fault, not a visitor's.
+    // Answer 503 so the form shows an error instead of a false confirmation.
+    if (err instanceof StorageUnavailableError) {
+      console.error("[waitlist] STORAGE NOT CONFIGURED — signup rejected:", err.message);
+      return NextResponse.json(
+        { error: "The waitlist is temporarily unavailable. Please try again shortly." },
+        { status: 503 },
+      );
+    }
     console.error("[waitlist] failed to record signup", err);
     return NextResponse.json(
       { error: "We couldn't save that just now. Please try again." },

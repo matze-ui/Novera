@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSignups } from "@/lib/server/waitlist-store";
+import { getSignups, StorageUnavailableError } from "@/lib/server/waitlist-store";
 import { Container } from "@/components/ui/container";
 
 export const metadata: Metadata = {
@@ -19,7 +19,29 @@ function formatDate(iso: string): string {
 }
 
 export default async function AdminPage() {
-  const signups = await getSignups();
+  let signups;
+  try {
+    signups = await getSignups();
+  } catch (err) {
+    if (err instanceof StorageUnavailableError) {
+      return (
+        <div className="bg-paper py-14">
+          <Container>
+            <h1 className="u-display text-4xl text-ink">Waitlist</h1>
+            <div className="mt-8 rounded-xl border border-alarm/30 bg-spot-tint p-6">
+              <p className="text-sm font-semibold text-alarm">
+                Storage is not configured — signups are being rejected.
+              </p>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
+                {err.message}
+              </p>
+            </div>
+          </Container>
+        </div>
+      );
+    }
+    throw err;
+  }
 
   const bySource = signups.reduce<Record<string, number>>((acc, entry) => {
     acc[entry.source] = (acc[entry.source] ?? 0) + 1;

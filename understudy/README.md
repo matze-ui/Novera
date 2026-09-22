@@ -59,17 +59,71 @@ The endpoint:
 - serialises writes, so two signups arriving at once can't overwrite
   each other.
 
-### This will not survive a serverless deploy
+### Where signups actually go
 
-`.data/waitlist.json` is real persistence for **one long-running server** and
-survives restarts. It does **not** work on Vercel, Cloudflare or Lambda, where
-the filesystem is ephemeral per invocation, and it is not safe across multiple
-instances. The rate limiter is per-process memory with the same caveat.
+`src/lib/server/waitlist-store.ts` picks a driver at runtime:
 
-Before pointing a launch campaign at this, replace `readAll`/`writeAll` in
-`src/lib/server/waitlist-store.ts` with a real store — Postgres, Turso, or an
-email audience like Resend/Loops. That file is the only thing that needs to
-change; the API route and the forms stay as they are.
+1. **`DATABASE_URL` set → Postgres** (`storage/postgres.ts`). The production
+   path. Positions come from an identity column and duplicates are settled by
+   a unique index, so it is correct across multiple instances — no in-process
+   queue involved.
+2. **Ephemeral host, no database → a guard that rejects every signup**
+   (`storage/ephemeral.ts`). On Vercel, Lambda, Netlify, Cloudflare Pages or
+   Cloud Run the filesystem is discarded after each request, so the file store
+   would answer "you're on the list" and lose the row. Instead the API returns
+   **503** and logs loudly. It fails closed, like the `/admin` gate.
+3. **Otherwise → the JSON file** (`storage/file.ts`). Local dev, or one
+   long-running server with real disk. Writes are serialised so concurrent
+   signups can't overwrite each other.
+
+The in-memory rate limiter is still per-process and resets on restart; put a
+real limiter in front before a launch campaign.
+
+## Going live
+
+`main` deploys to Vercel through `.github/workflows/understudy-deploy.yml`,
+which runs on GitHub's runners. Three one-time steps:
+
+**1. Create the Vercel project.** Locally, in `understudy/`:
+
+```bash
+npx vercel link          # creates understudy/.vercel/project.json
+```
+
+**2. Add three repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Where it comes from |
+| --- | --- |
+| `VERCEL_TOKEN` | vercel.com/account/tokens |
+| `VERCEL_ORG_ID` | `understudy/.vercel/project.json` |
+| `VERCEL_PROJECT_ID` | `understudy/.vercel/project.json` |
+
+**3. Add a database.** In the Vercel project's own environment variables, set
+`DATABASE_URL` to a Postgres connection string — Neon, Supabase, Vercel
+Postgres and Railway all work. Use the provider's **pooled** connection string;
+a direct one exhausts connections under serverless load. The table is created
+automatically on first write.
+
+Then push to `main`, or run the workflow manually from the Actions tab.
+
+The deploy ends by posting a real signup to the live URL. If the waitlist has
+no database it answers 503 and **the workflow fails on purpose** — a green
+deploy means signups are genuinely being stored. Delete the
+`deploy-check@understudy.invalid` row from `/admin` afterwards.
+
+Set `ADMIN_USERNAME` / `ADMIN_PASSWORD` in Vercel too, or `/admin` stays shut
+(it fails closed).
+
+### Before you point real traffic at it
+
+- **There is no Impressum or privacy policy.** Both are legally required for a
+  commercial site in Austria and the EU. The NOVERA app at the repo root has
+  versions to model.
+- **Cold email and cold calling are restricted in Austria.** § 174 TKG 2021
+  requires prior consent for advertising by electronic mail *and* by phone,
+  with no B2B exception, and fines reach EUR 50,000 per violation. Getting
+  people onto this waitlist by emailing a purchased list is not a lawful
+  launch plan — take legal advice before any outbound campaign.
 
 ## Reading the signups
 
