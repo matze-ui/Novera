@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LEGAL, SITE_NAME, impressumMissingFields } from "@/lib/config";
+import { LEGAL, SITE_NAME, WAITLIST_ENDPOINT, impressumMissingFields } from "@/lib/config";
 import { Field, LegalPage, Section } from "@/components/legal/legal-ui";
 
 export const metadata: Metadata = {
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
  */
 export default function DatenschutzPage() {
   const missing = impressumMissingFields();
+  // The static export ships without the API route, so the forms accept nothing
+  // and none of the storage described below happens on such a deployment.
+  const waitlistOpen = Boolean(WAITLIST_ENDPOINT);
 
   return (
     <LegalPage title="Privacy" updated="22 September 2026" incomplete={missing}>
@@ -26,11 +29,18 @@ export default function DatenschutzPage() {
           domain, so your browser makes no request to Google or any other provider
           while you read the page.
         </p>
-        <p>
-          The only personal data we hold is what you type into the waitlist form. If
-          you never submit it, we store nothing about you beyond the short-lived
-          technical records described below.
-        </p>
+        {waitlistOpen ? (
+          <p>
+            The only personal data we hold is what you type into the waitlist form. If
+            you never submit it, we store nothing about you beyond the short-lived
+            technical records described below.
+          </p>
+        ) : (
+          <p>
+            The waitlist is not open on this site yet, so there is no form to submit and
+            we hold no personal data about you at all.
+          </p>
+        )}
       </Section>
 
       <Section heading="Controller">
@@ -53,7 +63,15 @@ export default function DatenschutzPage() {
       </Section>
 
       <Section heading="What the waitlist stores">
-        <p>When you submit the form we record exactly these fields:</p>
+        {waitlistOpen ? (
+          <p>When you submit the form we record exactly these fields:</p>
+        ) : (
+          <p>
+            Nothing yet: the forms on this site say the waitlist opens shortly and accept
+            no input, so no sign-up reaches us. When it opens, these are the fields it
+            will record, and this page will be updated before that happens:
+          </p>
+        )}
         <ul className="list-disc space-y-1 pl-5">
           <li>
             <strong>Email address</strong> — required. Stored lowercased, and used to
@@ -84,13 +102,15 @@ export default function DatenschutzPage() {
       </Section>
 
       <Section heading="Technical data">
-        <p>
-          The waitlist endpoint is rate-limited to protect it from automated abuse.
-          To do that, your IP address is held <strong>in memory only, for at most
-          sixty seconds</strong>, and is never written to the database or associated
-          with your submission. Legal basis: legitimate interest in keeping the
-          service available, Art. 6(1)(f) GDPR.
-        </p>
+        {waitlistOpen && (
+          <p>
+            The waitlist endpoint is rate-limited to protect it from automated abuse.
+            To do that, your IP address is held <strong>in memory only, for at most
+            sixty seconds</strong>, and is never written to the database or associated
+            with your submission. Legal basis: legitimate interest in keeping the
+            service available, Art. 6(1)(f) GDPR.
+          </p>
+        )}
         <p>
           Our hosting provider{" "}
           {LEGAL.hostingProvider ? (
